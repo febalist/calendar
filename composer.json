@@ -1,0 +1,11 @@
+{
+  "name": "febalist/holidays",
+  "autoload": {
+    "psr-4": {
+      "Febalist\\Holidays\\": "src/"
+    }
+  },
+  "require": {
+    "nesbot/carbon": "^1.0"
+  }
+}
