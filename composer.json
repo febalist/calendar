@@ -1,8 +1,8 @@
 {
-  "name": "febalist/holidays",
+  "name": "febalist/calendar",
   "autoload": {
     "psr-4": {
-      "Febalist\\Holidays\\": "src/"
+      "Febalist\\Calendar\\": "src/"
     }
   },
   "require": {
