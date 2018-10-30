@@ -64,7 +64,7 @@ class Calendar extends Carbon
     {
         $workdays = 0;
 
-        $date = $this->resolveCarbon($date)->copy()->startOfDay();
+        $date = $this->resolveCarbon($date);
 
         $dates = [$this, $date];
         if ($this > $date) {
