@@ -17,9 +17,9 @@ class Calendar extends Carbon
         return static::$calendar;
     }
 
-    public function isWorkday()
+    public function isWorkday($full = false)
     {
-        return !$this->isHoliday();
+        return !$this->isHoliday() && (!$full || !$this->isShort());
     }
 
     public function isHoliday()
@@ -27,40 +27,40 @@ class Calendar extends Carbon
         return $this->inCalendar('holidays');
     }
 
-    public function isShortened()
+    public function isShort()
     {
         return $this->inCalendar('preholidays');
     }
 
-    public function addWorkday($value = 1)
+    public function addWorkday($value = 1, $full = false)
     {
-        return $this->addWorkdays($value);
+        return $this->addWorkdays($value, $full);
     }
 
-    public function addWorkdays($value)
+    public function addWorkdays($value, $full = false)
     {
         $workdays = 0;
         $step = $value >= 0 ? 1 : -1;
 
         while ($workdays < $value) {
             $this->addDay($step);
-            $workdays += $this->isWorkday();
+            $workdays += $this->isWorkday($full);
         }
 
         return $this;
     }
 
-    public function subWorkday($value = 1)
+    public function subWorkday($value = 1, $full = false)
     {
-        return $this->subWorkdays($value);
+        return $this->subWorkdays($value, $full);
     }
 
-    public function subWorkdays($value)
+    public function subWorkdays($value, $full = false)
     {
-        return $this->addWorkdays(-1 * $value);
+        return $this->addWorkdays(-1 * $value, $full);
     }
 
-    public function workdaysBetween($date = null)
+    public function workdaysBetween($date = null, $full = false)
     {
         $workdays = 0;
 
@@ -74,8 +74,8 @@ class Calendar extends Carbon
         $end = $dates[1]->copy()->startOfDay();
 
         while ($date <= $end) {
-            $workdays += $date->isWorkday();
-            $date->addWorkday();
+            $workdays += $date->isWorkday($full);
+            $date->addWorkday(1, $full);
         }
 
         return $workdays;
