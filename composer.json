@@ -3,7 +3,10 @@
   "autoload": {
     "psr-4": {
       "Febalist\\Calendar\\": "src/"
-    }
+    },
+    "files": [
+      "src/helpers.php"
+    ]
   },
   "require": {
     "nesbot/carbon": "^1.0"

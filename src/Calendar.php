@@ -11,7 +11,7 @@ class Calendar extends Carbon
     protected static function calendar()
     {
         if (!static::$calendar) {
-            static::$calendar = json_decode(file_get_contents(__DIR__.'/calendar.json'));
+            static::$calendar = json_decode(file_get_contents(__DIR__.'/calendar.json'), true);
         }
 
         return static::$calendar;
@@ -58,6 +58,27 @@ class Calendar extends Carbon
     public function subWorkdays($value)
     {
         return $this->addWorkdays(-1 * $value);
+    }
+
+    public function workdaysBetween($date = null)
+    {
+        $workdays = 0;
+
+        $date = $this->resolveCarbon($date)->copy()->startOfDay();
+
+        $dates = [$this, $date];
+        if ($this > $date) {
+            $dates = array_reverse($dates);
+        }
+        $date = $dates[0]->copy()->startOfDay();
+        $end = $dates[1]->copy()->startOfDay();
+
+        while ($date <= $end) {
+            $workdays += $date->isWorkday();
+            $date->addWorkday();
+        }
+
+        return $workdays;
     }
 
     protected function inCalendar($type)
