@@ -41,6 +41,7 @@ class Calendar extends Carbon
     {
         $workdays = 0;
         $step = $value >= 0 ? 1 : -1;
+        $value = abs($value);
 
         while ($workdays < $value) {
             $this->addDay($step);
