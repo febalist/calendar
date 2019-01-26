@@ -61,6 +61,24 @@ class Calendar extends Carbon
         return $this->addWorkdays(-1 * $value, $full);
     }
 
+    public function previousOrCurrentWorkday($full = false)
+    {
+        if (!$this->isWorkday($full)) {
+            $this->subWorkday(1, $full);
+        }
+
+        return $this;
+    }
+
+    public function nextOrCurrentWorkday($full = false)
+    {
+        if (!$this->isWorkday($full)) {
+            $this->addWorkday(1, $full);
+        }
+
+        return $this;
+    }
+
     public function workdaysBetween($date = null, $full = false)
     {
         $workdays = 0;
