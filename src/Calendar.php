@@ -81,7 +81,62 @@ class Calendar extends Carbon
 
     public function workdaysBetween($date = null, $full = false)
     {
-        $workdays = 0;
+        return $this->sumBetweenDays($date, function (Calendar $date) use ($full) {
+            return $date->isWorkday($full) ? 1 : 0;
+        });
+    }
+
+    public function workdaysInMonth($full = false)
+    {
+        return $this->clone()->startOfMonth()
+            ->workdaysBetween($this->clone()->endOfMonth(), $full);
+    }
+
+    public function holidaysBetween($date = null)
+    {
+        return $this->sumBetweenDays($date, function (Calendar $date) {
+            return $date->isHoliday() ? 1 : 0;
+        });
+    }
+
+    public function holidaysInMonth()
+    {
+        return $this->clone()->startOfMonth()
+            ->holidaysBetween($this->clone()->endOfMonth());
+    }
+
+    public function workhoursInDay($workhoursInWeek = 40)
+    {
+        if ($this->isHoliday()) {
+            return 0;
+        }
+
+        $workhours = $workhoursInWeek / 5;
+
+        return $this->isWorkday(true) ? $workhours : $workhours - 1;
+    }
+
+    public function workhoursBetween($date = null, $workhoursInWeek = 40)
+    {
+        return $this->sumBetweenDays($date, function (Calendar $date) use ($workhoursInWeek) {
+            return $date->workhoursInDay($workhoursInWeek);
+        });
+    }
+
+    public function workhoursInMonth($workhoursInWeek = 40)
+    {
+        return $this->clone()->startOfMonth()
+            ->workhoursBetween($this->clone()->endOfMonth(), $workhoursInWeek);
+    }
+
+    protected function inCalendar($type)
+    {
+        return in_array($this->toDateString(), static::data()[$type]);
+    }
+
+    protected function sumBetweenDays($date, callable $callback)
+    {
+        $sum = 0;
 
         $date = $this->resolveCarbon($date);
 
@@ -93,15 +148,10 @@ class Calendar extends Carbon
         $end = $dates[1]->copy()->startOfDay();
 
         while ($date <= $end) {
-            $workdays += $date->isWorkday($full);
-            $date->addWorkday(1, $full);
+            $sum += $callback($date);
+            $date->addDay();
         }
 
-        return $workdays;
-    }
-
-    protected function inCalendar($type)
-    {
-        return in_array($this->toDateString(), static::data()[$type]);
+        return $sum;
     }
 }
