@@ -8,7 +8,7 @@ class Calendar extends Carbon
 {
     protected static $calendar;
 
-    protected static function calendar()
+    protected static function data()
     {
         if (!static::$calendar) {
             static::$calendar = json_decode(file_get_contents(__DIR__.'/calendar.json'), true);
@@ -102,6 +102,6 @@ class Calendar extends Carbon
 
     protected function inCalendar($type)
     {
-        return in_array($this->toDateString(), static::calendar()[$type]);
+        return in_array($this->toDateString(), static::data()[$type]);
     }
 }
