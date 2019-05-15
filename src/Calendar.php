@@ -88,8 +88,8 @@ class Calendar extends Carbon
 
     public function workdaysInMonth($full = false)
     {
-        return $this->clone()->startOfMonth()
-            ->workdaysBetween($this->clone()->endOfMonth(), $full);
+        return $this->copy()->startOfMonth()
+            ->workdaysBetween($this->copy()->endOfMonth(), $full);
     }
 
     public function holidaysBetween($date = null)
@@ -101,8 +101,8 @@ class Calendar extends Carbon
 
     public function holidaysInMonth()
     {
-        return $this->clone()->startOfMonth()
-            ->holidaysBetween($this->clone()->endOfMonth());
+        return $this->copy()->startOfMonth()
+            ->holidaysBetween($this->copy()->endOfMonth());
     }
 
     public function workhoursInDay($workhoursInWeek = 40)
@@ -125,8 +125,8 @@ class Calendar extends Carbon
 
     public function workhoursInMonth($workhoursInWeek = 40)
     {
-        return $this->clone()->startOfMonth()
-            ->workhoursBetween($this->clone()->endOfMonth(), $workhoursInWeek);
+        return $this->copy()->startOfMonth()
+            ->workhoursBetween($this->copy()->endOfMonth(), $workhoursInWeek);
     }
 
     protected function inCalendar($type)
