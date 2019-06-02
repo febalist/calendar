@@ -123,10 +123,22 @@ class Calendar extends Carbon
         });
     }
 
+    public function workhoursInWeek($workhoursInWeek = 40)
+    {
+        return $this->copy()->startOfWeek()
+            ->workhoursBetween($this->copy()->endOfWeek(), $workhoursInWeek);
+    }
+
     public function workhoursInMonth($workhoursInWeek = 40)
     {
         return $this->copy()->startOfMonth()
             ->workhoursBetween($this->copy()->endOfMonth(), $workhoursInWeek);
+    }
+
+    public function workhoursInYear($workhoursInWeek = 40)
+    {
+        return $this->copy()->startOfYear()
+            ->workhoursBetween($this->copy()->endOfYear(), $workhoursInWeek);
     }
 
     protected function inCalendar($type)
