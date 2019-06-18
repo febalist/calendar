@@ -139,6 +139,16 @@ class Calendar extends Carbon
         return $this;
     }
 
+    public function nextOrCurrentWorkday()
+    {
+        return $this->nextOrCurrentDayType(static::IS_WORKDAY);
+    }
+
+    public function previousOrCurrentWorkday()
+    {
+        return $this->previousOrCurrentDayType(static::IS_WORKDAY);
+    }
+
     public function sumBetweenDays($date, callable $callback)
     {
         $sum = 0;
