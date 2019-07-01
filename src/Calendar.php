@@ -6,14 +6,13 @@ use Carbon\Carbon;
 
 class Calendar extends Carbon
 {
-    const IS_WORKDAY = 1;
-    const IS_HOLIDAY = 2;
-    const IS_SPECIAL = 4;
+    const TYPE_WORKDAY_FULL = 0;
+    const TYPE_WORKDAY_SHORT = 1;
+    const TYPE_HOLIDAY_MINOR = 2;
+    const TYPE_HOLIDAY_MAJOR = 3;
 
-    const TYPE_WORKDAY_FULL = self::IS_WORKDAY;
-    const TYPE_WORKDAY_SHORT = self::IS_WORKDAY | self::IS_SPECIAL;
-    const TYPE_HOLIDAY_USUAL = self::IS_HOLIDAY;
-    const TYPE_HOLIDAY_CELEBRATION = self::IS_HOLIDAY | self::IS_SPECIAL;
+    const TYPE_WORKDAY = 4;
+    const TYPE_HOLIDAY = 5;
 
     const DEFAULT_WORKHOURS_IN_WEEK = 40;
 
@@ -35,37 +34,45 @@ class Calendar extends Carbon
 
     public function isType($type)
     {
-        return static::getType() & $type;
+        if ($type == static::TYPE_WORKDAY) {
+            return in_array($this->getType(), [static::TYPE_WORKDAY_FULL, static::TYPE_WORKDAY_SHORT]);
+        }
+
+        if ($type == static::TYPE_HOLIDAY) {
+            return in_array($this->getType(), [static::TYPE_HOLIDAY_MINOR, static::TYPE_HOLIDAY_MAJOR]);
+        }
+
+        return $this->getType() == $type;
     }
 
     public function isWorkdayFull()
     {
-        return static::isType(static::TYPE_WORKDAY_FULL);
+        return $this->isType(static::TYPE_WORKDAY_FULL);
     }
 
     public function isWorkdayShort()
     {
-        return static::isType(static::TYPE_WORKDAY_SHORT);
+        return $this->isType(static::TYPE_WORKDAY_SHORT);
     }
 
     public function isWorkday()
     {
-        return static::isType(static::IS_WORKDAY);
+        return $this->isType(static::TYPE_WORKDAY);
     }
 
-    public function isHolidayUsual()
+    public function isHolidayMinor()
     {
-        return static::isType(static::TYPE_HOLIDAY_USUAL);
+        return $this->isType(static::TYPE_HOLIDAY_MINOR);
     }
 
-    public function isHolidayCelebration()
+    public function isHolidayMajor()
     {
-        return static::isType(static::TYPE_HOLIDAY_CELEBRATION);
+        return $this->isType(static::TYPE_HOLIDAY_MAJOR);
     }
 
     public function isHoliday()
     {
-        return static::isType(static::IS_HOLIDAY);
+        return $this->isType(static::TYPE_HOLIDAY);
     }
 
     public function addDaysFilter($value, callable $filter)
@@ -103,7 +110,7 @@ class Calendar extends Carbon
 
     public function addWorkdays($value)
     {
-        return $this->addDaysType($value, static::IS_WORKDAY);
+        return $this->addDaysType($value, static::TYPE_WORKDAY);
     }
 
     public function subWorkdays($value)
@@ -141,12 +148,12 @@ class Calendar extends Carbon
 
     public function nextOrCurrentWorkday()
     {
-        return $this->nextOrCurrentDayType(static::IS_WORKDAY);
+        return $this->nextOrCurrentDayType(static::TYPE_WORKDAY);
     }
 
     public function previousOrCurrentWorkday()
     {
-        return $this->previousOrCurrentDayType(static::IS_WORKDAY);
+        return $this->previousOrCurrentDayType(static::TYPE_WORKDAY);
     }
 
     public function sumBetweenDays($date, callable $callback)
@@ -181,7 +188,7 @@ class Calendar extends Carbon
 
     public function workdaysBetween($date = null)
     {
-        return $this->daysTypeBetween($date, static::IS_WORKDAY);
+        return $this->daysTypeBetween($date, static::TYPE_WORKDAY);
     }
 
     public function workdaysInMonth()
@@ -198,7 +205,7 @@ class Calendar extends Carbon
 
     public function holidaysBetween($date = null)
     {
-        return $this->daysTypeBetween($date, static::IS_HOLIDAY);
+        return $this->daysTypeBetween($date, static::TYPE_WORKDAY);
     }
 
     public function holidaysInMonth()
