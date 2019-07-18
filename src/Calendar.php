@@ -3,6 +3,8 @@
 namespace Febalist\Calendar;
 
 use Carbon\Carbon;
+use Jawira\CaseConverter\Convert;
+use OutOfRangeException;
 
 class Calendar extends Carbon
 {
@@ -15,6 +17,7 @@ class Calendar extends Carbon
     const TYPE_HOLIDAY = 5;
 
     const DEFAULT_WORKHOURS_IN_WEEK = 40;
+    const YEARS_RANGE = [1999, 2025];
 
     protected static $calendar;
 
@@ -84,6 +87,10 @@ class Calendar extends Carbon
         while ($result < $value) {
             $this->addDays($step);
             $result += $filter($this);
+
+            if ($this->year < static::YEARS_RANGE[0] || $this->year > static::YEARS_RANGE[1]) {
+                throw new OutOfRangeException();
+            }
         }
 
         return $this;
