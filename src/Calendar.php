@@ -17,14 +17,17 @@ class Calendar extends Carbon
     const TYPE_HOLIDAY = 5;
 
     const DEFAULT_WORKHOURS_IN_WEEK = 40;
-    const YEARS_RANGE = [1999, 2025];
 
     protected static $calendar;
+    protected static $yearsRange;
 
     protected static function data()
     {
         if (!static::$calendar) {
             static::$calendar = json_decode(file_get_contents(__DIR__.'/data.json'), true);
+
+            $years = array_keys(static::$calendar);
+            static::$yearsRange = [min($years), max($years)];
         }
 
         return static::$calendar;
@@ -88,7 +91,7 @@ class Calendar extends Carbon
             $this->addDays($step);
             $result += $filter($this);
 
-            if ($this->year < static::YEARS_RANGE[0] || $this->year > static::YEARS_RANGE[1]) {
+            if ($this->year < static::$yearsRange[0] || $this->year > static::$yearsRange[1]) {
                 throw new OutOfRangeException();
             }
         }
