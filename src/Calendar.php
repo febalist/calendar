@@ -6,6 +6,35 @@ use Carbon\Carbon;
 use Jawira\CaseConverter\Convert;
 use OutOfRangeException;
 
+/**
+ * @method bool isWorkday()
+ * @method bool isWorkdayFull()
+ * @method bool isWorkdayShort()
+ *
+ * @method bool isHoliday()
+ * @method bool isHolidayMinor()
+ * @method bool isHolidayMajor()
+ *
+ * @method $this addWorkday()
+ * @method $this addWorkdays(int $value = 1)
+ * @method $this addWorkdayFull(int $value = 1)
+ * @method $this addWorkdayShort(int $value = 1)
+ *
+ * @method $this addHoliday()
+ * @method $this addHolidays(int $value = 1)
+ * @method $this addHolidayMinor(int $value = 1)
+ * @method $this addHolidayMajor(int $value = 1)
+ *
+ * @method $this subWorkday()
+ * @method $this subWorkdays(int $value = 1)
+ * @method $this subWorkdayFull(int $value = 1)
+ * @method $this subWorkdayShort(int $value = 1)
+ *
+ * @method $this subHoliday()
+ * @method $this subHolidays(int $value = 1)
+ * @method $this subHolidayMinor(int $value = 1)
+ * @method $this subHolidayMajor(int $value = 1)
+ */
 class Calendar extends Carbon
 {
     const TYPE_WORKDAY_FULL = 0;
@@ -33,6 +62,42 @@ class Calendar extends Carbon
         return static::$calendar;
     }
 
+    public function __call($method, $parameters)
+    {
+        $types = [
+            'workday_full' => static::TYPE_WORKDAY_FULL,
+            'workday_short' => static::TYPE_WORKDAY_SHORT,
+            'holiday_minor' => static::TYPE_HOLIDAY_MINOR,
+            'holiday_major' => static::TYPE_HOLIDAY_MAJOR,
+            'workday' => static::TYPE_WORKDAY,
+            'holiday' => static::TYPE_HOLIDAY,
+        ];
+
+        $unit = rtrim($method, 's');
+
+        if (substr($unit, 0, 2) === 'is') {
+            $unit = substr($unit, 2);
+            $unit = with(new Convert($unit))->toSnake();
+
+            if (in_array($unit, array_keys($types))) {
+                return $this->isType($types[$unit]);
+            }
+        }
+
+        $action = substr($unit, 0, 3);
+
+        if ($action === 'add' || $action === 'sub') {
+            $unit = substr($unit, 3);
+            $unit = with(new Convert($unit))->toSnake();
+
+            if (in_array($unit, array_keys($types))) {
+                return $this->{"${action}DaysType"}($parameters[0] ?? 1, $types[$unit]);
+            }
+        }
+
+        return parent::__call($method, $parameters);
+    }
+
     public function getType()
     {
         return static::data()[$this->year][$this->month][$this->day] ?? static::TYPE_WORKDAY_FULL;
@@ -49,36 +114,6 @@ class Calendar extends Carbon
         }
 
         return $this->getType() == $type;
-    }
-
-    public function isWorkdayFull()
-    {
-        return $this->isType(static::TYPE_WORKDAY_FULL);
-    }
-
-    public function isWorkdayShort()
-    {
-        return $this->isType(static::TYPE_WORKDAY_SHORT);
-    }
-
-    public function isWorkday()
-    {
-        return $this->isType(static::TYPE_WORKDAY);
-    }
-
-    public function isHolidayMinor()
-    {
-        return $this->isType(static::TYPE_HOLIDAY_MINOR);
-    }
-
-    public function isHolidayMajor()
-    {
-        return $this->isType(static::TYPE_HOLIDAY_MAJOR);
-    }
-
-    public function isHoliday()
-    {
-        return $this->isType(static::TYPE_HOLIDAY);
     }
 
     public function addDaysFilter($value, callable $filter)
@@ -116,26 +151,6 @@ class Calendar extends Carbon
     public function subDaysType($value, $type)
     {
         return $this->addDaysType(-1 * $value, $type);
-    }
-
-    public function addWorkdays($value)
-    {
-        return $this->addDaysType($value, static::TYPE_WORKDAY);
-    }
-
-    public function subWorkdays($value)
-    {
-        return $this->addWorkdays(-1 * $value);
-    }
-
-    public function addWorkday()
-    {
-        return $this->addWorkdays(1);
-    }
-
-    public function subWorkday()
-    {
-        return $this->subWorkdays(1);
     }
 
     public function nextOrCurrentDayType($type)
