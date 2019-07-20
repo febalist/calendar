@@ -319,37 +319,38 @@ class Calendar extends Carbon
         return $range[0]->typeBetween($range[1], $type);
     }
 
-    public function workhoursInDay($workhoursInWeek = self::DEFAULT_WORKHOURS_IN_WEEK)
+    public function workhoursInDay($workhoursInWeek = null)
     {
         if ($this->isHoliday()) {
             return 0;
         }
-
+        
+        $workhoursInWeek = $workhoursInWeek !== null ? $workhoursInWeek : static::DEFAULT_WORKHOURS_IN_WEEK;
         $workhours = $workhoursInWeek / 5;
 
         return $this->isWorkdayFull() ? $workhours : $workhours - 1;
     }
 
-    public function workhoursBetween($date = null, $workhoursInWeek = self::DEFAULT_WORKHOURS_IN_WEEK)
+    public function workhoursBetween($date = null, $workhoursInWeek = null)
     {
         return $this->sumBetweenDays($date, function (Calendar $date) use ($workhoursInWeek) {
             return $date->workhoursInDay($workhoursInWeek);
         });
     }
 
-    public function workhoursInWeek($workhoursInWeek = self::DEFAULT_WORKHOURS_IN_WEEK)
+    public function workhoursInWeek($workhoursInWeek = null)
     {
         return $this->copy()->startOfWeek()
             ->workhoursBetween($this->copy()->endOfWeek(), $workhoursInWeek);
     }
 
-    public function workhoursInMonth($workhoursInWeek = self::DEFAULT_WORKHOURS_IN_WEEK)
+    public function workhoursInMonth($workhoursInWeek = null)
     {
         return $this->copy()->startOfMonth()
             ->workhoursBetween($this->copy()->endOfMonth(), $workhoursInWeek);
     }
 
-    public function workhoursInYear($workhoursInWeek = self::DEFAULT_WORKHOURS_IN_WEEK)
+    public function workhoursInYear($workhoursInWeek = null)
     {
         return $this->copy()->startOfYear()
             ->workhoursBetween($this->copy()->endOfYear(), $workhoursInWeek);
