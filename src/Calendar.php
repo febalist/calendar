@@ -165,7 +165,7 @@ class Calendar extends Carbon
         return $this->addDaysFilter(-1 * $value, $filter);
     }
 
-    public function addDaysType($type, $value)
+    public function addType($type, $value)
     {
         $this->addDaysFilter($value, function (Calendar $date) use ($type) {
             return $date->isType($type);
@@ -174,15 +174,15 @@ class Calendar extends Carbon
         return $this;
     }
 
-    public function subDaysType($type, $value)
+    public function subType($type, $value)
     {
-        return $this->addDaysType($type, $value * -1);
+        return $this->addType($type, $value * -1);
     }
 
     public function nearestNextType($type)
     {
         if (!$this->isType($type)) {
-            $this->addDaysType($type, 1);
+            $this->addType($type, 1);
         }
 
         return $this;
@@ -191,7 +191,7 @@ class Calendar extends Carbon
     public function nearestPrevType($type)
     {
         if (!$this->isType($type)) {
-            $this->subDaysType($type, 1);
+            $this->subType($type, 1);
         }
 
         return $this;
@@ -220,7 +220,7 @@ class Calendar extends Carbon
         return $sum;
     }
 
-    public function daysTypeBetween($date, $type)
+    public function typeBetween($date, $type)
     {
         return $this->sumBetweenDays($date, function (Calendar $date) use ($type) {
             return $date->isType($type);
@@ -229,7 +229,7 @@ class Calendar extends Carbon
 
     public function workdaysBetween($date = null)
     {
-        return $this->daysTypeBetween($date, static::TYPE_WORKDAY);
+        return $this->typeBetween($date, static::TYPE_WORKDAY);
     }
 
     public function workdaysInMonth()
@@ -246,7 +246,7 @@ class Calendar extends Carbon
 
     public function holidaysBetween($date = null)
     {
-        return $this->daysTypeBetween($date, static::TYPE_WORKDAY);
+        return $this->typeBetween($date, static::TYPE_WORKDAY);
     }
 
     public function holidaysInMonth()
