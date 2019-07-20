@@ -56,6 +56,13 @@ use OutOfRangeException;
  * @method $this nearestPrevHoliday()
  * @method $this nearestPrevHolidayMinor()
  * @method $this nearestPrevHolidayMajor()
+ *
+ * @method int workdaysBetween($date)
+ * @method int workdaysFullBetween($date)
+ * @method int workdaysShortBetween($date)
+ * @method int holidaysBetween($date)
+ * @method int holidaysMinorBetween($date)
+ * @method int holidaysMajorBetween($date)
  */
 class Calendar extends Carbon
 {
@@ -131,6 +138,14 @@ class Calendar extends Carbon
                 if (in_array($type, array_keys($types))) {
                     return $this->{"${action}${direction}Type"}($types[$type]);
                 }
+            }
+        }
+
+        if (substr($method, -7) === 'Between') {
+            $type = $this->snake(substr($method, 0, -7));
+
+            if (in_array($type, array_keys($types))) {
+                return $this->typeBetween($parameters[0], $types[$type]);
             }
         }
 
@@ -240,11 +255,6 @@ class Calendar extends Carbon
         });
     }
 
-    public function workdaysBetween($date = null)
-    {
-        return $this->typeBetween($date, static::TYPE_WORKDAY);
-    }
-
     public function workdaysInMonth()
     {
         return $this->copy()->startOfMonth()
@@ -255,11 +265,6 @@ class Calendar extends Carbon
     {
         return $this->copy()->startOfYear()
             ->workdaysBetween($this->copy()->endOfYear());
-    }
-
-    public function holidaysBetween($date = null)
-    {
-        return $this->typeBetween($date, static::TYPE_WORKDAY);
     }
 
     public function holidaysInMonth()
