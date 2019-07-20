@@ -315,6 +315,15 @@ class Calendar extends Carbon
             ->workhoursBetween($this->copy()->endOfYear(), $workhoursInWeek);
     }
 
+    /** @return static[] */
+    public function unitRange($unit)
+    {
+        return [
+            $this->copy()->startOf($unit),
+            $this->copy()->endOf($unit),
+        ];
+    }
+
     protected function resolveCalendar($date = null)
     {
         if ($date instanceof self) {
