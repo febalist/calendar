@@ -96,17 +96,17 @@ use OutOfRangeException;
  * @method int holidaysMajorInYear()
  * @method int holidaysMajorInDecade()
  *
- * @method static[] secondRange()
- * @method static[] minuteRange()
- * @method static[] hourRange()
- * @method static[] dayRange()
- * @method static[] weekRange()
- * @method static[] monthRange()
- * @method static[] yearRange()
- * @method static[] quarterRange()
- * @method static[] decadeRange()
- * @method static[] centuryRange()
- * @method static[] millenniumRange()
+ * @method static [] secondRange()
+ * @method static [] minuteRange()
+ * @method static [] hourRange()
+ * @method static [] dayRange()
+ * @method static [] weekRange()
+ * @method static [] monthRange()
+ * @method static [] yearRange()
+ * @method static [] quarterRange()
+ * @method static [] decadeRange()
+ * @method static [] centuryRange()
+ * @method static [] millenniumRange()
  */
 class Calendar extends Carbon
 {
@@ -324,7 +324,7 @@ class Calendar extends Carbon
         if ($this->isHoliday()) {
             return 0;
         }
-        
+
         $workhoursInWeek = $workhoursInWeek !== null ? $workhoursInWeek : static::DEFAULT_WORKHOURS_IN_WEEK;
         $workhours = $workhoursInWeek / 5;
 
