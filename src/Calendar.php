@@ -43,19 +43,19 @@ use OutOfRangeException;
  * @method $this subHolidaysMinor(int $value = 1)
  * @method $this subHolidaysMajor(int $value = 1)
  *
- * @method $this nearestNextWorkday()
- * @method $this nearestNextWorkdayFull()
- * @method $this nearestNextWorkdayShort()
- * @method $this nearestNextHoliday()
- * @method $this nearestNextHolidayMinor()
- * @method $this nearestNextHolidayMajor()
+ * @method $this nextWorkday()
+ * @method $this nextWorkdayFull()
+ * @method $this nextWorkdayShort()
+ * @method $this nextHoliday()
+ * @method $this nextHolidayMinor()
+ * @method $this nextHolidayMajor()
  *
- * @method $this nearestPrevWorkday()
- * @method $this nearestPrevWorkdayFull()
- * @method $this nearestPrevWorkdayShort()
- * @method $this nearestPrevHoliday()
- * @method $this nearestPrevHolidayMinor()
- * @method $this nearestPrevHolidayMajor()
+ * @method $this prevWorkday()
+ * @method $this prevWorkdayFull()
+ * @method $this prevWorkdayShort()
+ * @method $this prevHoliday()
+ * @method $this prevHolidayMinor()
+ * @method $this prevHolidayMajor()
  *
  * @method int workdaysBetween($date)
  * @method int workdaysFullBetween($date)
@@ -159,17 +159,13 @@ class Calendar extends Carbon
             }
         }
 
-        $action = substr($method, 0, 7);
+        $action = substr($method, 0, 4);
 
-        if ($action === 'nearest') {
-            $direction = substr($method, 7, 4);
+        if ($action === 'next' || $action === 'prev') {
+            $type = $this->snake(substr($method, 4));
 
-            if (in_array($direction, ['Next', 'Prev'])) {
-                $type = $this->snake(substr($method, 11));
-
-                if (in_array($type, array_keys($types))) {
-                    return $this->{"${action}${direction}Type"}($types[$type]);
-                }
+            if (in_array($type, array_keys($types))) {
+                return $this->{"${action}Type"}($types[$type]);
             }
         }
 
@@ -248,7 +244,7 @@ class Calendar extends Carbon
         return $this->addType($type, $value * -1);
     }
 
-    public function nearestNextType($type)
+    public function nextType($type)
     {
         if (!$this->isType($type)) {
             $this->addType($type, 1);
@@ -257,7 +253,7 @@ class Calendar extends Carbon
         return $this;
     }
 
-    public function nearestPrevType($type)
+    public function prevType($type)
     {
         if (!$this->isType($type)) {
             $this->subType($type, 1);
