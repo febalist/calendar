@@ -9,7 +9,7 @@
     ]
   },
   "require": {
-    "nesbot/carbon": "^1.0|^2.0",
+    "nesbot/carbon": "^2.0",
     "jawira/case-converter": "^v3.0"
   }
 }
