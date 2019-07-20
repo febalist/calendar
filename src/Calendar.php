@@ -96,6 +96,12 @@ use OutOfRangeException;
  * @method int holidaysMajorInYear()
  * @method int holidaysMajorInDecade()
  *
+ * @method float workhoursInWeek(int $workhoursInWeek = null)
+ * @method float workhoursInMonth(int $workhoursInWeek = null)
+ * @method float workhoursInYear(int $workhoursInWeek = null)
+ * @method float workhoursInQuarter(int $workhoursInWeek = null)
+ * @method float workhoursInDecade(int $workhoursInWeek = null)
+ *
  * @method static [] secondRange()
  * @method static [] minuteRange()
  * @method static [] hourRange()
@@ -119,6 +125,8 @@ class Calendar extends Carbon
     const TYPE_HOLIDAY = 5;
 
     const DEFAULT_WORKHOURS_IN_WEEK = 40;
+
+    const BIG_UNITS = 'Week|Month|Quarter|Year|Decade';
 
     protected static $calendar;
     protected static $yearsRange;
@@ -189,7 +197,9 @@ class Calendar extends Carbon
             }
         }
 
-        if (preg_match('/^(.+)In(Week|Month|Quarter|Year|Decade)$/', $method, $match)) {
+        $bigUnits = static::BIG_UNITS;
+
+        if (preg_match("/^(.+)In($bigUnits)\$/", $method, $match)) {
             $type = $this->snake($match[1]);
             $unit = $match[2];
 
@@ -204,6 +214,12 @@ class Calendar extends Carbon
             if ($this->isModifiableUnit($unit)) {
                 return $this->unitRange($unit);
             }
+        }
+
+        if (preg_match("/^workhoursIn($bigUnits)\$/", $method, $match)) {
+            $unit = $match[1];
+
+            return $this->workhoursInUnit($unit, ...$parameters);
         }
 
         return parent::__call($method, $parameters);
@@ -338,22 +354,11 @@ class Calendar extends Carbon
         });
     }
 
-    public function workhoursInWeek($workhoursInWeek = null)
+    public function workhoursInUnit($unit, $workhoursInWeek = null)
     {
-        return $this->copy()->startOfWeek()
-            ->workhoursBetween($this->copy()->endOfWeek(), $workhoursInWeek);
-    }
+        $range = $this->unitRange($unit);
 
-    public function workhoursInMonth($workhoursInWeek = null)
-    {
-        return $this->copy()->startOfMonth()
-            ->workhoursBetween($this->copy()->endOfMonth(), $workhoursInWeek);
-    }
-
-    public function workhoursInYear($workhoursInWeek = null)
-    {
-        return $this->copy()->startOfYear()
-            ->workhoursBetween($this->copy()->endOfYear(), $workhoursInWeek);
+        return $range[0]->workhoursBetween($range[1], $workhoursInWeek);
     }
 
     /** @return static[] */
