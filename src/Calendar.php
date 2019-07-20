@@ -34,6 +34,20 @@ use OutOfRangeException;
  * @method $this subHolidays(int $value = 1)
  * @method $this subHolidayMinor(int $value = 1)
  * @method $this subHolidayMajor(int $value = 1)
+ *
+ * @method $this nearestNextWorkday()
+ * @method $this nearestNextWorkdayFull()
+ * @method $this nearestNextWorkdayShort()
+ * @method $this nearestNextHoliday()
+ * @method $this nearestNextHolidayMinor()
+ * @method $this nearestNextHolidayMajor()
+ *
+ * @method $this nearestPrevWorkday()
+ * @method $this nearestPrevWorkdayFull()
+ * @method $this nearestPrevWorkdayShort()
+ * @method $this nearestPrevHoliday()
+ * @method $this nearestPrevHolidayMinor()
+ * @method $this nearestPrevHolidayMajor()
  */
 class Calendar extends Carbon
 {
@@ -73,25 +87,37 @@ class Calendar extends Carbon
             'holiday' => static::TYPE_HOLIDAY,
         ];
 
-        $unit = rtrim($method, 's');
+        $type = rtrim($method, 's');
 
-        if (substr($unit, 0, 2) === 'is') {
-            $unit = substr($unit, 2);
-            $unit = with(new Convert($unit))->toSnake();
+        if (substr($type, 0, 2) === 'is') {
+            $type = $this->snake(substr($type, 2));
 
-            if (in_array($unit, array_keys($types))) {
-                return $this->isType($types[$unit]);
+            if (in_array($type, array_keys($types))) {
+                return $this->isType($types[$type]);
             }
         }
 
-        $action = substr($unit, 0, 3);
+        $action = substr($type, 0, 3);
 
         if ($action === 'add' || $action === 'sub') {
-            $unit = substr($unit, 3);
-            $unit = with(new Convert($unit))->toSnake();
+            $type = $this->snake(substr($type, 3));
 
-            if (in_array($unit, array_keys($types))) {
-                return $this->{"${action}Type"}($types[$unit], $parameters[0] ?? 1);
+            if (in_array($type, array_keys($types))) {
+                return $this->{"${action}Type"}($types[$type], $parameters[0] ?? 1);
+            }
+        }
+
+        $action = substr($type, 0, 7);
+
+        if ($action === 'nearest') {
+            $direction = substr($method, 7, 4);
+
+            if (in_array($direction, ['Next', 'Prev'])) {
+                $type = $this->snake(substr($method, 11));
+
+                if (in_array($type, array_keys($types))) {
+                    return $this->{"${action}${direction}Type"}($types[$type]);
+                }
             }
         }
 
@@ -153,32 +179,22 @@ class Calendar extends Carbon
         return $this->addDaysType($type, $value * -1);
     }
 
-    public function nextOrCurrentType($type)
+    public function nearestNextType($type)
     {
         if (!$this->isType($type)) {
-            $this->addDaysType($type);
+            $this->addDaysType($type, 1);
         }
 
         return $this;
     }
 
-    public function previousOrCurrentType($type)
+    public function nearestPrevType($type)
     {
         if (!$this->isType($type)) {
-            $this->subDaysType($type);
+            $this->subDaysType($type, 1);
         }
 
         return $this;
-    }
-
-    public function nextOrCurrentWorkday()
-    {
-        return $this->nextOrCurrentType(static::TYPE_WORKDAY);
-    }
-
-    public function previousOrCurrentWorkday()
-    {
-        return $this->previousOrCurrentType(static::TYPE_WORKDAY);
     }
 
     public function sumBetweenDays($date, callable $callback)
@@ -288,5 +304,10 @@ class Calendar extends Carbon
         }
 
         return static::parse($date);
+    }
+
+    private function snake($string)
+    {
+        return with(new Convert($string))->toSnake();
     }
 }
