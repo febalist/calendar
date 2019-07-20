@@ -200,15 +200,15 @@ class Calendar extends Carbon
 
     public function isType($type)
     {
-        if ($type == static::TYPE_WORKDAY) {
+        if ($type === static::TYPE_WORKDAY) {
             return in_array($this->getType(), [static::TYPE_WORKDAY_FULL, static::TYPE_WORKDAY_SHORT]);
         }
 
-        if ($type == static::TYPE_HOLIDAY) {
+        if ($type === static::TYPE_HOLIDAY) {
             return in_array($this->getType(), [static::TYPE_HOLIDAY_MINOR, static::TYPE_HOLIDAY_MAJOR]);
         }
 
-        return $this->getType() == $type;
+        return $this->getType() === $type;
     }
 
     public function addDaysFilter($value, callable $filter)
@@ -219,7 +219,7 @@ class Calendar extends Carbon
 
         while ($result < $value) {
             $this->addDays($step);
-            $result += $filter($this);
+            $result += $filter($this) ? 1 : 0;
 
             if ($this->year < static::$yearsRange[0] || $this->year > static::$yearsRange[1]) {
                 throw new OutOfRangeException();
