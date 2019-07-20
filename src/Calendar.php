@@ -63,6 +63,38 @@ use OutOfRangeException;
  * @method int holidaysBetween($date)
  * @method int holidaysMinorBetween($date)
  * @method int holidaysMajorBetween($date)
+ *
+ * @method int workdaysInWeek()
+ * @method int workdaysInMonth()
+ * @method int workdaysInQuarter()
+ * @method int workdaysInYear()
+ * @method int workdaysInDecade()
+ * @method int workdaysFullInWeek()
+ * @method int workdaysFullInMonth()
+ * @method int workdaysFullInQuarter()
+ * @method int workdaysFullInYear()
+ * @method int workdaysFullInDecade()
+ * @method int workdaysShortInWeek()
+ * @method int workdaysShortInMonth()
+ * @method int workdaysShortInQuarter()
+ * @method int workdaysShortInYear()
+ * @method int workdaysShortInDecade()
+ *
+ * @method int holidaysInWeek()
+ * @method int holidaysInMonth()
+ * @method int holidaysInQuarter()
+ * @method int holidaysInYear()
+ * @method int holidaysInDecade()
+ * @method int holidaysMinorInWeek()
+ * @method int holidaysMinorInMonth()
+ * @method int holidaysMinorInQuarter()
+ * @method int holidaysMinorInYear()
+ * @method int holidaysMinorInDecade()
+ * @method int holidaysMajorInWeek()
+ * @method int holidaysMajorInMonth()
+ * @method int holidaysMajorInQuarter()
+ * @method int holidaysMajorInYear()
+ * @method int holidaysMajorInDecade()
  */
 class Calendar extends Carbon
 {
@@ -146,6 +178,15 @@ class Calendar extends Carbon
 
             if (in_array($type, array_keys($types))) {
                 return $this->typeBetween($parameters[0], $types[$type]);
+            }
+        }
+
+        if (preg_match('/^(.+)In(Week|Month|Quarter|Year|Decade)$/', $method, $match)) {
+            $type = $this->snake($match[1]);
+            $unit = $match[2];
+
+            if (in_array($type, array_keys($types))) {
+                return $this->typeBetweenUnit($unit, $types[$type]);
             }
         }
 
@@ -255,28 +296,11 @@ class Calendar extends Carbon
         });
     }
 
-    public function workdaysInMonth()
+    public function typeBetweenUnit($unit, $type)
     {
-        return $this->copy()->startOfMonth()
-            ->workdaysBetween($this->copy()->endOfMonth());
-    }
+        $range = $this->unitRange($unit);
 
-    public function workdaysInYear()
-    {
-        return $this->copy()->startOfYear()
-            ->workdaysBetween($this->copy()->endOfYear());
-    }
-
-    public function holidaysInMonth()
-    {
-        return $this->copy()->startOfMonth()
-            ->holidaysBetween($this->copy()->endOfMonth());
-    }
-
-    public function holidaysInYear()
-    {
-        return $this->copy()->startOfYear()
-            ->holidaysBetween($this->copy()->endOfYear());
+        return $range[0]->typeBetween($range[1], $type);
     }
 
     public function workhoursInDay($workhoursInWeek = self::DEFAULT_WORKHOURS_IN_WEEK)
