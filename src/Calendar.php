@@ -98,8 +98,8 @@ use OutOfRangeException;
  *
  * @method float workhoursInWeek(int $workhoursInWeek = null)
  * @method float workhoursInMonth(int $workhoursInWeek = null)
- * @method float workhoursInYear(int $workhoursInWeek = null)
  * @method float workhoursInQuarter(int $workhoursInWeek = null)
+ * @method float workhoursInYear(int $workhoursInWeek = null)
  * @method float workhoursInDecade(int $workhoursInWeek = null)
  *
  * @method static [] secondRange()
@@ -108,8 +108,8 @@ use OutOfRangeException;
  * @method static [] dayRange()
  * @method static [] weekRange()
  * @method static [] monthRange()
- * @method static [] yearRange()
  * @method static [] quarterRange()
+ * @method static [] yearRange()
  * @method static [] decadeRange()
  * @method static [] centuryRange()
  * @method static [] millenniumRange()
