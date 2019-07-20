@@ -95,6 +95,18 @@ use OutOfRangeException;
  * @method int holidaysMajorInQuarter()
  * @method int holidaysMajorInYear()
  * @method int holidaysMajorInDecade()
+ *
+ * @method static[] secondRange()
+ * @method static[] minuteRange()
+ * @method static[] hourRange()
+ * @method static[] dayRange()
+ * @method static[] weekRange()
+ * @method static[] monthRange()
+ * @method static[] yearRange()
+ * @method static[] quarterRange()
+ * @method static[] decadeRange()
+ * @method static[] centuryRange()
+ * @method static[] millenniumRange()
  */
 class Calendar extends Carbon
 {
@@ -183,6 +195,14 @@ class Calendar extends Carbon
 
             if (in_array($type, array_keys($types))) {
                 return $this->typeBetweenUnit($unit, $types[$type]);
+            }
+        }
+
+        if (substr($method, -5) === 'Range') {
+            $unit = substr($method, 0, -5);
+
+            if ($this->isModifiableUnit($unit)) {
+                return $this->unitRange($unit);
             }
         }
 
