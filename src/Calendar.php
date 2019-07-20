@@ -91,7 +91,7 @@ class Calendar extends Carbon
             $unit = with(new Convert($unit))->toSnake();
 
             if (in_array($unit, array_keys($types))) {
-                return $this->{"${action}DaysType"}($parameters[0] ?? 1, $types[$unit]);
+                return $this->{"${action}Type"}($parameters[0] ?? 1, $types[$unit]);
             }
         }
 
@@ -153,7 +153,7 @@ class Calendar extends Carbon
         return $this->addDaysType(-1 * $value, $type);
     }
 
-    public function nextOrCurrentDayType($type)
+    public function nextOrCurrentType($type)
     {
         if (!$this->isType($type)) {
             $this->addDaysType($type);
@@ -162,7 +162,7 @@ class Calendar extends Carbon
         return $this;
     }
 
-    public function previousOrCurrentDayType($type)
+    public function previousOrCurrentType($type)
     {
         if (!$this->isType($type)) {
             $this->subDaysType($type);
@@ -173,12 +173,12 @@ class Calendar extends Carbon
 
     public function nextOrCurrentWorkday()
     {
-        return $this->nextOrCurrentDayType(static::TYPE_WORKDAY);
+        return $this->nextOrCurrentType(static::TYPE_WORKDAY);
     }
 
     public function previousOrCurrentWorkday()
     {
-        return $this->previousOrCurrentDayType(static::TYPE_WORKDAY);
+        return $this->previousOrCurrentType(static::TYPE_WORKDAY);
     }
 
     public function sumBetweenDays($date, callable $callback)
