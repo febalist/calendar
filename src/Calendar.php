@@ -91,7 +91,7 @@ class Calendar extends Carbon
             $unit = with(new Convert($unit))->toSnake();
 
             if (in_array($unit, array_keys($types))) {
-                return $this->{"${action}Type"}($parameters[0] ?? 1, $types[$unit]);
+                return $this->{"${action}Type"}($types[$unit], $parameters[0] ?? 1);
             }
         }
 
@@ -139,7 +139,7 @@ class Calendar extends Carbon
         return $this->addDaysFilter(-1 * $value, $filter);
     }
 
-    public function addDaysType($value, $type)
+    public function addDaysType($type, $value)
     {
         $this->addDaysFilter($value, function (Calendar $date) use ($type) {
             return $date->isType($type);
@@ -148,9 +148,9 @@ class Calendar extends Carbon
         return $this;
     }
 
-    public function subDaysType($value, $type)
+    public function subDaysType($type, $value)
     {
-        return $this->addDaysType(-1 * $value, $type);
+        return $this->addDaysType($type, $value * -1);
     }
 
     public function nextOrCurrentType($type)
