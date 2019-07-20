@@ -126,7 +126,7 @@ class Calendar extends Carbon
 
     const DEFAULT_WORKHOURS_IN_WEEK = 40;
 
-    const BIG_UNITS = 'Week|Month|Quarter|Year|Decade';
+    const CALENDAR_BIG_UNITS = 'Week|Month|Quarter|Year|Decade';
 
     protected static $calendar;
     protected static $yearsRange;
@@ -197,7 +197,7 @@ class Calendar extends Carbon
             }
         }
 
-        $bigUnits = static::BIG_UNITS;
+        $bigUnits = static::CALENDAR_BIG_UNITS;
 
         if (preg_match("/^(.+)In($bigUnits)\$/", $method, $match)) {
             $type = $this->snake($match[1]);
