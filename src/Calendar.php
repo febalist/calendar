@@ -16,24 +16,32 @@ use OutOfRangeException;
  * @method bool isHolidayMajor()
  *
  * @method $this addWorkday()
+ * @method $this addWorkdayFull()
+ * @method $this addWorkdayShort()
  * @method $this addWorkdays(int $value = 1)
- * @method $this addWorkdayFull(int $value = 1)
- * @method $this addWorkdayShort(int $value = 1)
+ * @method $this addWorkdaysFull(int $value = 1)
+ * @method $this addWorkdaysShort(int $value = 1)
  *
  * @method $this addHoliday()
+ * @method $this addHolidayMinor()
+ * @method $this addHolidayMajor()
  * @method $this addHolidays(int $value = 1)
- * @method $this addHolidayMinor(int $value = 1)
- * @method $this addHolidayMajor(int $value = 1)
+ * @method $this addHolidaysMinor(int $value = 1)
+ * @method $this addHolidaysMajor(int $value = 1)
  *
  * @method $this subWorkday()
+ * @method $this subWorkdayFull()
+ * @method $this subWorkdayShort()
  * @method $this subWorkdays(int $value = 1)
- * @method $this subWorkdayFull(int $value = 1)
- * @method $this subWorkdayShort(int $value = 1)
+ * @method $this subWorkdaysFull(int $value = 1)
+ * @method $this subWorkdaysShort(int $value = 1)
  *
  * @method $this subHoliday()
+ * @method $this subHolidayMinor()
+ * @method $this subHolidayMajor()
  * @method $this subHolidays(int $value = 1)
- * @method $this subHolidayMinor(int $value = 1)
- * @method $this subHolidayMajor(int $value = 1)
+ * @method $this subHolidaysMinor(int $value = 1)
+ * @method $this subHolidaysMajor(int $value = 1)
  *
  * @method $this nearestNextWorkday()
  * @method $this nearestNextWorkdayFull()
@@ -85,29 +93,34 @@ class Calendar extends Carbon
             'holiday_major' => static::TYPE_HOLIDAY_MAJOR,
             'workday' => static::TYPE_WORKDAY,
             'holiday' => static::TYPE_HOLIDAY,
+
+            'workdays_full' => static::TYPE_WORKDAY_FULL,
+            'workdays_short' => static::TYPE_WORKDAY_SHORT,
+            'holidays_minor' => static::TYPE_HOLIDAY_MINOR,
+            'holidays_major' => static::TYPE_HOLIDAY_MAJOR,
+            'workdays' => static::TYPE_WORKDAY,
+            'holidays' => static::TYPE_HOLIDAY,
         ];
 
-        $type = rtrim($method, 's');
-
-        if (substr($type, 0, 2) === 'is') {
-            $type = $this->snake(substr($type, 2));
+        if (substr($method, 0, 2) === 'is') {
+            $type = $this->snake(substr($method, 2));
 
             if (in_array($type, array_keys($types))) {
                 return $this->isType($types[$type]);
             }
         }
 
-        $action = substr($type, 0, 3);
+        $action = substr($method, 0, 3);
 
         if ($action === 'add' || $action === 'sub') {
-            $type = $this->snake(substr($type, 3));
+            $type = $this->snake(substr($method, 3));
 
             if (in_array($type, array_keys($types))) {
                 return $this->{"${action}Type"}($types[$type], $parameters[0] ?? 1);
             }
         }
 
-        $action = substr($type, 0, 7);
+        $action = substr($method, 0, 7);
 
         if ($action === 'nearest') {
             $direction = substr($method, 7, 4);
