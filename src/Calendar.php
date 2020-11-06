@@ -128,6 +128,15 @@ class Calendar extends Carbon
 
     protected const CALENDAR_BIG_UNITS = 'Week|Month|Quarter|Year|Decade';
 
+    public const SECONDS_PER_HOUR = self::SECONDS_PER_MINUTE * self::MINUTES_PER_HOUR;
+    public const SECONDS_PER_DAY = self::SECONDS_PER_HOUR * self::HOURS_PER_DAY;
+    public const SECONDS_PER_WEEK = self::SECONDS_PER_DAY * self::DAYS_PER_WEEK;
+
+    public const MINUTES_PER_DAY = self::MINUTES_PER_HOUR * self::HOURS_PER_DAY;
+    public const MINUTES_PER_WEEK = self::MINUTES_PER_DAY * self::DAYS_PER_WEEK;
+
+    public const HOURS_PER_WEEK = self::HOURS_PER_DAY * self::DAYS_PER_WEEK;
+
     protected static $calendar;
     protected static $yearsRange;
 
