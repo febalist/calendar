@@ -116,17 +116,17 @@ use OutOfRangeException;
  */
 class Calendar extends Carbon
 {
-    const TYPE_WORKDAY_FULL = 0;
-    const TYPE_WORKDAY_SHORT = 1;
-    const TYPE_HOLIDAY_MINOR = 2;
-    const TYPE_HOLIDAY_MAJOR = 3;
+    public const TYPE_WORKDAY_FULL = 0;
+    public const TYPE_WORKDAY_SHORT = 1;
+    public const TYPE_HOLIDAY_MINOR = 2;
+    public const TYPE_HOLIDAY_MAJOR = 3;
 
-    const TYPE_WORKDAY = 4;
-    const TYPE_HOLIDAY = 5;
+    public const TYPE_WORKDAY = 4;
+    public const TYPE_HOLIDAY = 5;
 
-    const DEFAULT_WORKHOURS_IN_WEEK = 40;
+    protected const DEFAULT_WORKHOURS_IN_WEEK = 40;
 
-    const CALENDAR_BIG_UNITS = 'Week|Month|Quarter|Year|Decade';
+    protected const CALENDAR_BIG_UNITS = 'Week|Month|Quarter|Year|Decade';
 
     protected static $calendar;
     protected static $yearsRange;
