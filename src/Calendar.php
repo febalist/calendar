@@ -102,17 +102,17 @@ use OutOfRangeException;
  * @method float workhoursInYear(int $workhoursInWeek = null)
  * @method float workhoursInDecade(int $workhoursInWeek = null)
  *
- * @method static [] secondRange()
- * @method static [] minuteRange()
- * @method static [] hourRange()
- * @method static [] dayRange()
- * @method static [] weekRange()
- * @method static [] monthRange()
- * @method static [] quarterRange()
- * @method static [] yearRange()
- * @method static [] decadeRange()
- * @method static [] centuryRange()
- * @method static [] millenniumRange()
+ * @method array|static[] secondRange()
+ * @method array|static[] minuteRange()
+ * @method array|static[] hourRange()
+ * @method array|static[] dayRange()
+ * @method array|static[] weekRange()
+ * @method array|static[] monthRange()
+ * @method array|static[] quarterRange()
+ * @method array|static[] yearRange()
+ * @method array|static[] decadeRange()
+ * @method array|static[] centuryRange()
+ * @method array|static[] millenniumRange()
  */
 class Calendar extends Carbon
 {
