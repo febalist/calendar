@@ -1,5 +1,10 @@
 {
   "name": "febalist/calendar",
+  "require": {
+    "ext-json": "*",
+    "jawira/case-converter": "^v3.0",
+    "nesbot/carbon": "^2.0"
+  },
   "autoload": {
     "psr-4": {
       "Febalist\\Calendar\\": "src/"
@@ -7,9 +12,5 @@
     "files": [
       "src/helpers.php"
     ]
-  },
-  "require": {
-    "nesbot/carbon": "^2.0",
-    "jawira/case-converter": "^v3.0"
   }
 }

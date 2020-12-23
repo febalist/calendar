@@ -4,7 +4,7 @@ namespace Febalist\Calendar;
 
 $major = json_decode(file_get_contents(__DIR__.'/data/major.json'), true);
 $content = json_decode(file_get_contents(__DIR__.'/data/content.json'), true);
-
+$csv = fopen(__DIR__.'/src/data.csv', 'wb');
 $data = [];
 $year_major = [];
 
@@ -29,9 +29,11 @@ foreach ($content as $year_content) {
                 $type = 2;
             }
 
+            fputcsv($csv, [date_create("$year-$month-$day")->format("Y-m-d"), $type]);
             $data[$year][$month][$day] = $type;
         }
     }
 }
 
+fclose($csv);
 file_put_contents(__DIR__.'/src/data.json', json_encode($data));
