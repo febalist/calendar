@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
-source .env
+set -e
 
-[[ -n $TOKEN ]] || exit 1
+file=data/data.txt
+year=2004
 
-url="https://data.gov.ru/api/json/dataset/7708660670-proizvcalendar/version/20151123T183036/content"
-wget --timeout 10 -O data/content.json "$url?access_token=$TOKEN"
+rm -f $file
+
+while ((year <= 2025)); do
+  curl "https://isdayoff.ru/api/getdata?year=$year&pre=1" >> $file
+  echo >> $file
+  year=$((year + 1))
+done

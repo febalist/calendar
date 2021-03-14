@@ -5,6 +5,11 @@
     "jawira/case-converter": "^v3.0",
     "nesbot/carbon": "^2.0"
   },
+  "require-dev": {
+    "ext-yaml": "*",
+    "spatie/icalendar-generator": "^1.0",
+    "symfony/var-dumper": "^5.2"
+  },
   "autoload": {
     "psr-4": {
       "Febalist\\Calendar\\": "src/"
