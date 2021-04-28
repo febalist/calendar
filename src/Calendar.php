@@ -140,6 +140,13 @@ class Calendar extends Carbon
     protected static $calendar;
     protected static $yearsRange;
 
+    protected static $exceptions = [];
+
+    public static function exceptions($data)
+    {
+        static::$exceptions = $data;
+    }
+
     protected static function data()
     {
         if (!static::$calendar) {
@@ -236,7 +243,9 @@ class Calendar extends Carbon
 
     public function getType()
     {
-        return static::data()[$this->year][$this->month][$this->day] ?? static::TYPE_WORKDAY_FULL;
+        return static::$exceptions[$this->year][$this->month][$this->day]
+            ?? static::data()[$this->year][$this->month][$this->day]
+            ?? static::TYPE_WORKDAY_FULL;
     }
 
     public function isType($type)
