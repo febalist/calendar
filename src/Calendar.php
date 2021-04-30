@@ -263,6 +263,8 @@ class Calendar extends Carbon
 
     public function addDaysFilter($value, callable $filter)
     {
+        static::data();
+
         $result = 0;
         $step = $value >= 0 ? 1 : -1;
         $value = abs($value);
